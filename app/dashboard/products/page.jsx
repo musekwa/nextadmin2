@@ -5,12 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 import Pagination from "../../ui/dashboard/pagination/pagination";
 import { fetchProducts } from "../../lib/data";
+import { deleteProduct } from "../../lib/actions";
 
 const ProductsPage = async ({ searchParams }) => {
   const q = searchParams?.q || "";
   const page = searchParams?.page || 1;
   const { count, products } = await fetchProducts(q, page);
-  
+
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -24,15 +25,16 @@ const ProductsPage = async ({ searchParams }) => {
         <thead>
           <tr>
             <td>Title</td>
-            <td>Description</td>
+            <td>Category</td>
             <td>Price</td>
             <td>Stock</td>
+            <td>Created</td>
             <td>Action</td>
           </tr>
         </thead>
         <tbody>
           {products.map((product) => (
-            <tr key={product._id}>
+            <tr key={product.id}>
               <td>
                 <div className={styles.product}>
                   <Image
@@ -45,19 +47,23 @@ const ProductsPage = async ({ searchParams }) => {
                   {product.title}
                 </div>
               </td>
-              <td>{product.desc}</td>
+              <td>{product.cat}</td>
               <td>{product.price}</td>
               <td>{product.stock}</td>
+              <td>{product.createdAt.toString().slice(4, 16)}</td>
               <td>
                 <div className={styles.buttons}>
-                  <Link href={`/dashboard/products/${product._id}`}>
+                  <Link href={`/dashboard/products/${product.id}`}>
                     <button className={`${styles.button} ${styles.view}`}>
                       View
                     </button>
                   </Link>
-                  <button className={`${styles.button} ${styles.delete}`}>
-                    Delete
-                  </button>
+                  <form action={deleteProduct}>
+                    <input type="hidden" name="id" value={product.id} />
+                    <button className={`${styles.button} ${styles.delete}`}>
+                      Delete
+                    </button>
+                  </form>
                 </div>
               </td>
             </tr>

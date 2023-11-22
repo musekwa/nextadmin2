@@ -46,7 +46,7 @@ const productSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    desc: {
+    cat: {
         type: String,
         required: true,
 
@@ -68,6 +68,9 @@ const productSchema = new mongoose.Schema({
         type: String,
     },
     size: {
+        type: String,
+    },
+    desc: {
         type: String,
     },
 
